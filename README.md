@@ -1,11 +1,10 @@
 # Matrix-based shape sensitivity analysis for linear strain energy of triangular thin shell elements
 Source code of K. Hayashi and R. Mesnil, "Matrix-based shape sensitivity analysis for linear strain energy of triangular thin shell elements"
 
-![mini_shell_axo](https://github.com/user-attachments/assets/014615d4-add0-4e9b-bd34-e5e7ae334890)
+![Scordelis-Lo_roof-01](https://github.com/user-attachments/assets/a38a8f57-c986-44f6-96ce-c872efd061c3)
 
-![error-02](https://github.com/user-attachments/assets/ea7ac01b-fe5b-41ac-88b8-44e25d5f989c)
+![time](https://github.com/user-attachments/assets/fc7cdea5-4d8e-4c52-942e-8600a498c85e)
 
-![time](https://github.com/user-attachments/assets/fac5925b-4624-426a-ba87-da3caa7beaed)
 
 ## File description
 
