@@ -8,10 +8,17 @@ Source code of K. Hayashi and R. Mesnil, "Matrix-based shape sensitivity analysi
 ![time](https://github.com/user-attachments/assets/fc7cdea5-4d8e-4c52-942e-8600a498c85e)
 
 
-## File description
+# Install
+The module can be installed through PyPI using the following command on the command prompt window:
+```
+pip install dktshell
+```
 
-### main.py
-The top-level code. This code is a demonstration of running the modules of shape sensitivity analysis in DKTShell.py.
+# How to use
+```
+algo = dktshell.DKTAnalysis(sparse=True)
+displacement,internal_force,reaction = algo.RunStructuralAnalysis(vert,face_tri,dirichlet,load,thickness=0.25,elastic_modulus=4.32e8,poisson_ratio=0.0) # Use this input for Scordelis-Lo roof example
+strain_energy,strain_energy_gradient = algo.StrainEnergy_with_Gradient(vert,face_tri,dirichlet,load,thickness=1,elastic_modulus=1,poisson_ratio=0.25)
+```
 
-### DKTShell.py
-The core code containing methods for shape sensitivity analysis.
+For more detailed example, please find **example.py**.
