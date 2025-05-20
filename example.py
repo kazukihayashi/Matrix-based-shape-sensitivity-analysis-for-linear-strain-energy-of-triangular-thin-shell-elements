@@ -1,5 +1,5 @@
 '''
-Source code of
+Source code for
 K. Hayashi and R. Mesnil, "Matrix-based shape sensitivity analysis for linear strain energy of triangular thin shell elements".
 
 NOTE:
@@ -16,11 +16,8 @@ Note that fix.dat must be represented by an 1D array taking either 0 (free) or 1
 
 from io import StringIO
 import numpy as np
-import DKTShell
+import dktshell
 
-'''
-
-'''
 with open("vertex.dat", 'r') as file:
     data = file.read()
     cleaned_data = data.replace('{', '').replace('}', '')
@@ -50,11 +47,11 @@ with open("load.dat", 'r') as file:
     cleaned_data = data.replace('{', '').replace('}', '')
     load_xyz = np.genfromtxt(StringIO(cleaned_data), delimiter=',')
 
-algo = DKTShell.DKTAnalysis(sparse=True)
+algo = dktshell.DKTAnalysis(sparse=True)
 # dirichlet = [[i,j,0.0] for i in pin for j in range(6)]
 dirichlet = [[i,j,0.0] for i in pin for j in [0,2]] # Use this option for Scordelis-Lo roof example
 load = np.zeros((vert.shape[0],6))
 load[:,0:3] = load_xyz
 
-d,r = algo.RunStructuralAnalysis(vert,face_tri,dirichlet,load,thickness=0.25,elastic_modulus=4.32e8,poisson_ratio=0.0) # Use this option for Scordelis-Lo roof example
-# s,s_g = algo.StrainEnergy_with_Gradient(vert,face_tri,dirichlet,load,thickness=1,elastic_modulus=1,poisson_ratio=0.25)
+displacement,internal_force,reaction = algo.RunStructuralAnalysis(vert,face_tri,dirichlet,load,thickness=0.25,elastic_modulus=4.32e8,poisson_ratio=0.0) # Use this input for Scordelis-Lo roof example
+strain_energy,strain_energy_gradient = algo.StrainEnergy_with_Gradient(vert,face_tri,dirichlet,load,thickness=1,elastic_modulus=1,poisson_ratio=0.25)
