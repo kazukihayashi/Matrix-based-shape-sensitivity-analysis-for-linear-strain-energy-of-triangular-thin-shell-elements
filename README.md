@@ -22,3 +22,7 @@ strain_energy,strain_energy_gradient = algo.StrainEnergy_with_Gradient(vert,face
 ```
 
 For more detailed example, please find **example.py** in the github repository.
+
+# Note
+If you run Python program in a directory and import this module for the first time, it will take several minutes for just-in-time (JIT) compilation using numba.
+This JIT compilation requires only once, and you can smoothly import this module from the second time.
