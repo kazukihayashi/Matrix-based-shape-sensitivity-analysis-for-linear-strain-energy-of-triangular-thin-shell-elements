@@ -21,4 +21,4 @@ displacement,internal_force,reaction = algo.RunStructuralAnalysis(vert,face_tri,
 strain_energy,strain_energy_gradient = algo.StrainEnergy_with_Gradient(vert,face_tri,dirichlet,load,thickness=1,elastic_modulus=1,poisson_ratio=0.25)
 ```
 
-For more detailed example, please find **example.py**.
+For more detailed example, please find **example.py** in the github repository.
