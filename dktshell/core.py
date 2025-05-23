@@ -1110,6 +1110,7 @@ class DKTAnalysis():
             Global stiffness matrix.
         '''
         nv = np.shape(vert)[0]
+        face = face.astype(np.int32)
         Kls, R = _LocalStiffnessMatrix(vert,face,thickness,elastic_modulus,poisson)
 
         if self.Init:
@@ -1150,6 +1151,7 @@ class DKTAnalysis():
             Gradients of global stiffness matrix with respect to the nodal coordinates (3･nv).
         '''
         nv = np.shape(vert)[0]
+        face = face.astype(np.int32)
 
         Kls, R = _LocalStiffnessMatrix(vert, face, thickness, elastic_modulus, poisson)
         Kls_g, R_g = _Grad_LocalStiffnessMatrix(vert, face, thickness, elastic_modulus, poisson)
@@ -1222,6 +1224,7 @@ class DKTAnalysis():
             in the order {dF/dx1, dF/dy1, dF/dz1, dF/dx2, ...}.
         '''
         nv = vert.shape[0]
+        face = face.astype(np.int32)
         
         if type(thickness) in [float, int]:
             thickness = np.ones(len(face)) * thickness
@@ -1313,6 +1316,7 @@ class DKTAnalysis():
             3,4,5: Reaction moments (rx,ry,rz).
         '''
         nv = vert.shape[0]
+        face = face.astype(np.int32)
 
         if type(thickness) in [float, int]:
             thickness = np.ones(len(face)) * thickness
@@ -1394,6 +1398,7 @@ class DKTAnalysis():
             3,4,5: rotational modes (rx,ry,rz).
         '''
         nv = vert.shape[0]
+        face = face.astype(np.int32)
 
         if type(thickness) in [float, int]:
             thickness = np.ones(len(face)) * thickness
