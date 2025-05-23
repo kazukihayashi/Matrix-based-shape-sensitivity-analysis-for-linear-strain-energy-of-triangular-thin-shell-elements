@@ -21,7 +21,7 @@ import dktshell
 with open("vertex.dat", 'r') as file:
     data = file.read()
     cleaned_data = data.replace('{', '').replace('}', '')
-    vert = np.genfromtxt(StringIO(cleaned_data), delimiter=',')
+    vert = np.genfromtxt(StringIO(cleaned_data), delimiter=',',dtype=float)
 
 with open("face.dat", 'r') as file:
     data = file.read()
