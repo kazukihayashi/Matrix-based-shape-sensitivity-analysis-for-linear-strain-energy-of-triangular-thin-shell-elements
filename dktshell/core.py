@@ -10,7 +10,7 @@ from numba import njit, f8, i4, b1
 from numba.types import Tuple
 
 CACHE = True # Reduce overhead by saving the compiled code. NOTE: It is recommended to set to True to avoid repetitive compilation.
-PARALLEL = False # Parallel might be effective only for +1M variables. NOTE: In the original paper this value is fixed to False.
+PARALLEL = False # Parallel might be effective only for +1M variables and using prange function. NOTE: In the original paper this value is fixed to False.
 FASTMATH = False # Relax some numerical rigour to gain additional performance. NOTE: it does not improve computational efficiency much, so it is recommended to set this option to False.
 
 '''
@@ -762,8 +762,7 @@ def _LocalStiffnessMatrix(vert, face, thickness, E, poisson):
 
         ## Assign fictitious (tiny) drilling stiffness
         for i in range(3):
-            f15 = [Kl[k,k] for k in range(dof*i,dof*i+mdof+bdof)]
-            f66 = 1e-8 * max(f15)
+            f66 = 1e-6 * np.array([Kl[k,k] for k in range(dof*i,dof*i+mdof+bdof)]).mean()
             Kl[i*dof + mdof + bdof, i*dof + mdof + bdof] = f66
 
         Kls[id_face] = Kl
@@ -894,7 +893,7 @@ def _Grad_LocalStiffnessMatrix(vert, face, thickness, E, poisson):
         ## Assign fictitious (tiny) drilling stiffness
         for j in range(id_var):
             for i in range(3):
-                f66_g = 1e-8 * np.array([Kl_g[j,k,k] for k in range(dof*i,dof*i+mdof+bdof)]).max()
+                f66_g = 1e-6 * np.array([Kl_g[j,k,k] for k in range(dof*i,dof*i+mdof+bdof)]).mean()
                 Kl_g[j,i*dof + mdof + bdof, i*dof + mdof + bdof] = f66_g
 
         Kls_g[:,id_face,:,:] = Kl_g
