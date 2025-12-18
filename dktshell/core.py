@@ -37,12 +37,14 @@ def _Coord3D(vert,connectivity):
     coord (np.ndarray<float>[nm,n_corners_per_element,3])
         Nodal coordinate matrices (3D) per element.
     '''
+
     nm = connectivity.shape[0]
     n_corners_per_element = connectivity.shape[1]
     coord = np.zeros((nm,n_corners_per_element,3))
     for i in range(nm):
         for j in range(n_corners_per_element):
             coord[i,j,:] = vert[connectivity[i,j],:]
+
     return coord
 
 @njit(f8[:](f8[:,:],i4[:,:]),cache=CACHE,parallel=PARALLEL,fastmath=FASTMATH)
@@ -60,6 +62,7 @@ def _Length(vert,edge):
     L (np.ndarray<float>[ne])
         Edge lengths.
     '''
+
     L = np.array([np.sum((vert[edge[i,1]]-vert[edge[i,0]])**2)**0.5 for i in range(edge.shape[0])],dtype=np.float64)
 
     return L
@@ -81,6 +84,7 @@ def _Grad_Length(vert,edge):
         Rows 0,1,2 are the gradients with respect to the x,y,z coordinate of the 1st endpoint.\\
         Rows 3,4,5 are the gradients with respect to the x,y,z coordinate of the 2nd endpoint.    
     '''
+
     ne = edge.shape[0]
     L = _Length(vert,edge)
     L_g = np.zeros((6,ne),dtype=np.float64)
@@ -107,6 +111,7 @@ def _TriangleArea(vert,face):
     a (np.ndarray<float>[nf,3])
         Components for computing face areas, where area = (a[0]^2+a[1]^2+a[2]^3)^(1/2)
     '''
+
     nf = face.shape[0]
     coord = _Coord3D(vert,face)
     a = np.zeros((nf,3))
@@ -136,6 +141,7 @@ def _Grad_TriangleArea(vert,face):
         Rows 3,4,5 are the gradients with respect to the x,y,z coordinate of the 2nd corner.\\
         Rows 6,7,8 are the gradients with respect to the x,y,z coordinate of the 3rd corner.
     '''
+
     nf = face.shape[0]
     coord = _Coord3D(vert,face)
     area, a = _TriangleArea(vert,face)
@@ -166,6 +172,7 @@ def _RotationMatrix(vert,face):
         3rd row (R[i,2,:]) is the unit normal vector.\\
         2nd row (R[i,1,:]) is the unit in-plane vector orthogonal to the 1st and 3rd vectors.
     '''
+
     nf = face.shape[0]
     R = np.empty((nf,3,3))
     L1 = _Length(vert,face)
@@ -199,6 +206,7 @@ def _Grad_RotationMatrix(vert,face):
         Rows 3,4,5 are the gradients with respect to the x,y,z coordinate of the 2nd corner.\\
         Rows 6,7,8 are the gradients with respect to the x,y,z coordinate of the 3rd corner.    
     '''
+
     nf = face.shape[0]
 
     R = _RotationMatrix(vert,face)
@@ -325,6 +333,7 @@ def _B_matrix_membrane(A,coord2D):
     Bm (np.ndarray<float>[nf,3,6])
         B-matrices with respect to in-plane displacements.
     '''
+
     nf = len(A) # number of faces
     A_2 = A*2 # double of triangle area
 
@@ -366,6 +375,7 @@ def _Grad_B_matrix_membrane(A,A_g,coord2D,coord2D_g):
         Rows 3,4,5 are the gradients with respect to the x,y,z coordinate of the 2nd corner.\\
         Rows 6,7,8 are the gradients with respect to the x,y,z coordinate of the 3rd corner.
     '''
+
     nf = len(A)
     ndof_per_face = 9
 
@@ -399,7 +409,7 @@ def _B_matrix_bending(A,coord2D,xi,eta):
     N1 = 2(1-xi-eta)(0.5-xi-eta)\\
     N2 = xi(2*xi-1)\\
     N3 = eta(2*eta-1)\\
-    N4 = 4xi･eta\\
+    N4 = 4xi*eta\\
     N5 = 4eta(1-xi-eta)\\
     N6 = 4xi(1-xi-eta)
 
@@ -426,6 +436,7 @@ def _B_matrix_bending(A,coord2D,xi,eta):
     International Journal for Numerical Methods in Engineering,
     Volume 15, Issue 12, pp. 1735-1876.
     '''
+
     nf = len(A)
 
     x = np.zeros((nf,3))
@@ -527,6 +538,7 @@ def _Grad_B_matrix_bending(A,A_g,coord2D,coord2D_g,xi,eta):
         Rows 3,4,5 are the gradients with respect to the x,y,z coordinate of the 2nd corner.\\
         Rows 6,7,8 are the gradients with respect to the x,y,z coordinate of the 3rd corner.
     '''
+
     nf = len(A)
 
     x = np.zeros((nf,3))
@@ -700,6 +712,7 @@ def _LocalStiffnessMatrix(vert, face, thickness, E, poisson):
     R (np.ndarray<float>[nf,3,3])
         Rotation matrices.
     '''
+
     dof = 6 # DOF per node (x,y,z,rx,ry,rz)
     mdof = 2 # DOF corresponding to membrane forces per node (x,y)
     bdof = 3 # DOF corresponding to bending forces per node (z,rx,ry)
@@ -798,6 +811,7 @@ def _Grad_LocalStiffnessMatrix(vert, face, thickness, E, poisson):
     Rows 3,4,5 are the gradients with respect to the x,y,z coordinate of the 2nd corner.\\
     Rows 6,7,8 are the gradients with respect to the x,y,z coordinate of the 3rd corner.
     '''
+
     dof = 6 # dof per node (x,y,z,rx,ry,rz)
     mdof = 2 # dof corresponding to membrane forces per node (x,y)
     bdof = 3 # dof corresponding to bending forces per node (z,rx,ry)
@@ -923,6 +937,7 @@ def _AssembleLocalStiffnessMatrices(face,Kls,R,compute_index):
     data (np.ndarray<float>[num_entries])
         values of the global stiffness matrix.
     '''
+
     Kls = np.ascontiguousarray(Kls)
     nf = np.shape(face)[0]
     n_corner_per_element = 3
@@ -989,6 +1004,7 @@ def _Grad_AssembleLocalStiffnessMatrices(face,Kls,R,Kls_g,R_g,compute_index):
     data (np.ndarray<float>[num_entries])
         values of the gradient of global stiffness matrix.
     '''
+
     Kls = np.ascontiguousarray(Kls)
     Kls_g = np.ascontiguousarray(Kls_g)
     nf = np.shape(face)[0]
@@ -1063,6 +1079,7 @@ class DKTAnalysis():
         poisson (float)
             Poisson's ratio of the material.
         '''
+
         self.dof_per_node = 6 # number of dofs per node (u,v,w,r_x,r_y,r_z)
         self.Sparse = sparse
         self.is_fixed_connectivity = is_fixed_connectivity
@@ -1076,6 +1093,7 @@ class DKTAnalysis():
         self.indices_g = None # A list of integer arrays organized by dof_ids. The indices of dof_ids==i is stored in i-th array of this data. We need this data instead of dof_ids, as scipy's csr format cannot handle multi-dimensional (more than 2D) arrays. Computed only when self.Init_g==True.
         self.row_g = None # Row componenets of non-zero elements in the global stiffness matrix, which is stored when self.Init_g==True.
         self.column_g = None # Column componenets of non-zero elements in the global stiffness matrix, which is stored when self.Init_g==True.
+        
         return
     
     def __reset__(self):
@@ -1088,7 +1106,7 @@ class DKTAnalysis():
     
     def _GlobalStiffness(self, vert, face, thickness, elastic_modulus, poisson):
         '''
-        This method computes the global stiffness matrix with the shape [6･nv,6･nv].
+        This method computes the global stiffness matrix with the shape [6*nv,6*nv].
 
         Parameters
         -----
@@ -1105,9 +1123,10 @@ class DKTAnalysis():
 
         Returns
         -----
-        K (np.ndarray<float>[6･nv,6･nv])
+        K (np.ndarray<float>[6*nv,6*nv])
             Global stiffness matrix.
         '''
+
         nv = np.shape(vert)[0]
         face = face.astype(np.int32)
         Kls, R = _LocalStiffnessMatrix(vert,face,thickness,elastic_modulus,poisson)
@@ -1146,9 +1165,10 @@ class DKTAnalysis():
 
         Returns
         -----
-        K_g (np.ndarray<float>[3･nv,6･nv,6･nv])
-            Gradients of global stiffness matrix with respect to the nodal coordinates (3･nv).
+        K_g (np.ndarray<float>[3*nv,6*nv,6*nv])
+            Gradients of global stiffness matrix with respect to the nodal coordinates (3*nv).
         '''
+
         nv = np.shape(vert)[0]
         face = face.astype(np.int32)
 
@@ -1185,9 +1205,10 @@ class DKTAnalysis():
 
         Returns
         -----
-        load_vector (np.ndarray<float>[6･nv])
+        load_vector (np.ndarray<float>[6*nv])
             Nodal load vector. If self.Sparse==true, the values are stored in the csr format.
         '''
+
         if self.Sparse:
             load_mat = sp.sparse.csr_matrix(load.flatten(),shape=(1,load.shape[0]*self.dof_per_node))   
             return sp.sparse.csr_matrix.transpose(load_mat)
@@ -1218,10 +1239,11 @@ class DKTAnalysis():
         -----
         strain_energy (float)
             Linear strain energy.
-        strain_energy_g (np.ndarray<float>[3･nv])
+        strain_energy_g (np.ndarray<float>[3*nv])
             Gradient of strain energy with respect to the nodal coordinates,
             in the order {dF/dx1, dF/dy1, dF/dz1, dF/dx2, ...}.
         '''
+
         nv = vert.shape[0]
         face = face.astype(np.int32)
         
@@ -1253,23 +1275,6 @@ class DKTAnalysis():
 
         strain_energy = 0.5*U_free@K_free@U_free
         strain_energy_g = np.array([-0.5*U_free@K_free_g[i]@U_free for i in range(len(K_free_g))])
-
-        # '''
-        # Check if analytical and numerical gradients of the strain energy are almost the same.
-        # '''
-        # delta = 1e-5 # Tiny interval for computing gradients numerically
-        # for iii in range(5):
-        #     F_g_a = strain_energy_g[iii]
-        #     vert_minus = np.copy(vert)
-        #     vert_minus[iii//3,iii%3] -= delta
-        #     d_minus, _ = self.RunStructuralAnalysis(vert_minus,face,dirichlet_condition,load,thickness,elastic_modulus,poisson_ratio)
-        #     F_minus = np.sum(d_minus*load)/2
-        #     vert_plus = np.copy(vert)
-        #     vert_plus[iii//3,iii%3] += delta
-        #     d_plus, _ = self.RunStructuralAnalysis(vert_plus,face,dirichlet_condition,load,thickness,elastic_modulus,poisson_ratio)
-        #     F_plus = np.sum(d_plus*load)/2
-        #     F_g_n = (F_plus-F_minus)/(2*delta)
-        #     print(f"variable {iii}:\n  analytical gradient:{F_g_a}\n  numerical gradient:={F_g_n}")
 
         return strain_energy, strain_energy_g
     
@@ -1314,6 +1319,7 @@ class DKTAnalysis():
             0,1,2: Reaction forces (x,y,z).\\
             3,4,5: Reaction moments (rx,ry,rz).
         '''
+
         nv = vert.shape[0]
         face = face.astype(np.int32)
 
@@ -1396,6 +1402,7 @@ class DKTAnalysis():
             0,1,2: translational modes (x,y,z).\\
             3,4,5: rotational modes (rx,ry,rz).
         '''
+        
         nv = vert.shape[0]
         face = face.astype(np.int32)
 
