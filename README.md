@@ -3,9 +3,9 @@ Source code of K. Hayashi and R. Mesnil, "Matrix-based shape sensitivity analysi
 
 ![Scordelis-Lo_roof](https://github.com/user-attachments/assets/b7fa99fa-64d8-4f07-8e60-03429ec137a9)
 
-![error](https://github.com/user-attachments/assets/235b22e0-78a4-47cc-af58-0a26ca94412c)
+![error](https://github.com/user-attachments/assets/9bfa42b6-43c3-4cdf-b2f9-4d3ee3f419e3)
 
-![time](https://github.com/user-attachments/assets/fc7cdea5-4d8e-4c52-942e-8600a498c85e)
+![time](https://github.com/user-attachments/assets/c17c3d08-e644-4951-8b5a-ea3c251cab54)
 
 
 # Install
