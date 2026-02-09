@@ -1,5 +1,5 @@
 # Matrix-based shape sensitivity analysis for linear strain energy of triangular thin shell elements
-Source code of K. Hayashi and R. Mesnil, Matrix-based shape sensitivity analysis for linear strain energy of triangular thin shell elements, International Journal for Numerical Methods in Engineering, Vol. 127, No. 3, 2026. [https://doi.org/10.1002/nme.70276](https://doi.org/10.1002/nme.70276)
+Source code of K. Hayashi and R. Mesnil, Matrix-based shape sensitivity analysis for linear strain energy of triangular thin shell elements, International Journal for Numerical Methods in Engineering, Vol. 127, No. 3, pp. 1-15, 2026. [https://doi.org/10.1002/nme.70276](https://doi.org/10.1002/nme.70276)
 
 ![Scordelis-Lo_roof](https://github.com/user-attachments/assets/b7fa99fa-64d8-4f07-8e60-03429ec137a9)
 
@@ -34,7 +34,7 @@ title = {Matrix-Based Shape Sensitivity Analysis for Linear Strain Energy of Tri
 journal = {International Journal for Numerical Methods in Engineering},
 volume = {127},
 number = {3},
-pages = {e70276},
+pages = {1-15},
 doi = {https://doi.org/10.1002/nme.70276},
 url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/nme.70276},
 eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/nme.70276},
